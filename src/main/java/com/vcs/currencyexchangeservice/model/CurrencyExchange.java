@@ -1,5 +1,8 @@
 package com.vcs.currencyexchangeservice.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,12 +10,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Entity
 public class CurrencyExchange {
 
+	@Id
 	private long id;
+	
+	@Column(name = "currency_from")
 	private String from;
+	
+	@Column(name = "currency_to")
 	private String to;
-	private double conversionMultiple;	
+	
+	private double conversionMultiple;
+	
 	private String environment;
 	
 	public CurrencyExchange(long id, String from, String to, double conversionMultiple) {

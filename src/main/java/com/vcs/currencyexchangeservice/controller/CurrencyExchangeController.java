@@ -6,10 +6,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vcs.currencyexchangeservice.exception.ExchangeNotFoundException;
 import com.vcs.currencyexchangeservice.model.CurrencyExchange;
+import com.vcs.currencyexchangeservice.repository.CurrencyExchangeRepository;
 
 @RestController
 public class CurrencyExchangeController {
+	
+	@Autowired
+	private CurrencyExchangeRepository repository;
 	
 	@Autowired
 	private Environment environment;
@@ -18,7 +23,10 @@ public class CurrencyExchangeController {
 	public CurrencyExchange retrieveExchangeValue(@PathVariable String from, @PathVariable String to) {
 		
 		String port = environment.getProperty("local.server.port");
-		CurrencyExchange currencyExchange = new CurrencyExchange(1001L, from, to, 80.00);
+		CurrencyExchange currencyExchange = repository.findByFromAndTo(from, to);
+		if ( currencyExchange == null )
+			throw new ExchangeNotFoundException("Exchange not found for: " + from + " to " + to);
+		
 		currencyExchange.setEnvironment(port);
 		return currencyExchange;
 	}	
